@@ -1,0 +1,85 @@
+% This code detects heights for each point and applies threshold to only select trees heights
+lidar_data = load("E:\Final thesis_code\Final Code (11-11-13)\Aitkenvale Area 1 (24-10-13) regularization\Atikenvale_sample02_lidar_Reg.txt", "r");
+
+[A, R, bbox] = geotiffread("E:\Final thesis_code\Final Code (11-11-13)\Aitkenvale Area 1 (24-10-13)\Atikenvale_sample02.tif");
+x_coords = lidar_data(:, 1);
+y_coords = lidar_data(:, 2);
+z_coords = lidar_data(:, 3);
+
+
+
+
+for i = 1:size(lidar_data, 1)
+  %%  disp("i")
+   %% disp(i)
+    x = x_coords(i);
+    y = y_coords(i);
+    search_radius = 1;
+
+distances = sqrt((x_coords - x).^2 + (y_coords - y).^2);
+object_points = z_coords(distances <= search_radius);
+object_height1(i) = max(object_points) - min(object_points);
+
+end
+% Find indices of elements that meet the condition (8 <= value < 11)
+indices = object_height1 >= 5 & object_height1 <= 12;
+
+%% Use logical indexing to extract the values that meet the condition
+%%filtered_heights = object_height1(indices);
+
+% Replace values that do not meet the condition with 0
+object_height1(~indices) = 0;
+
+% Display the modified 'object_height1' array
+%%disp('Modified object_height1:');
+%%disp(object_height1);
+
+lidar_data(indices,3) = 0;
+% Plot lidar data
+imshow(A);
+%plot3(lidar_data(:, 1), '.o',lidar_data(:, 2),'.g',lidar_data(:, 3), '.r'); % Red dots for lidar points
+figure;
+scatter3(lidar_data(:, 1), lidar_data(:, 2), lidar_data(:, 3), [], lidar_data(:, 3), 'filled');
+xlabel('X Values');
+ylabel('Y Values');
+zlabel('Z Values');
+title('3D Scatter Plot with Colormap');
+%%colorbar;
+%%colormap(jet); % Use the jet colormap or choose another colormap
+%%%grid on;
+%%%figure, mapshow(A,R); hold on; plot3(lidar_data(:,1),lidar_data(:,2),lidar_data(:,3),'.r'); hold on;
+
+
+
+
+%%colormap jet;
+
+
+% Display the image on top of the lidar points
+
+% Display the updated 'object_height1' array
+%%disp('Updated object_height1:');
+%%disp(object_height1);
+% Display the filtered heights
+%%disp('Filtered Heights:');
+%%disp(filtered_heights);
+%figure
+%%hold on
+%%plot(lidar_data(:,1),lidar_data(:,2),'.','Color','r')
+%%hold off
+%%figure
+%%plot(object_height1(1,:),'.', 'Color', 'blue');  % Plot object data
+%%hold on;  % Hold the current plot
+%%plot(lidar_data(:,1), lidar_data(:,2), '.', 'Color', 'black');  % Plot lidar data
+%%xlabel('X Coordinate');
+%%ylabel('Y Coordinate');
+%%title('Lidar Data and Object Heights');
+%%legend('Lidar Data', 'Object Heights');
+%grid on;
+%hold off;  % Release the plot hold
+
+
+
+
+
+
