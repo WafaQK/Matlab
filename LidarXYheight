@@ -1,0 +1,25 @@
+%% Simple point X and Y height extracted brom LIDAR data.
+lidar_data = load("E:\Final thesis_code\Final Code (11-11-13)\Aitkenvale Area 1 (24-10-13) regularization\Atikenvale_sample02_lidar_Reg.txt", "r");
+[A, R, bbox] = geotiffread("E:\Final thesis_code\Final Code (11-11-13)\Aitkenvale Area 1 (24-10-13)\Atikenvale_sample02.tif");
+
+plot(A(:, 1),A(:, 2),'.r'); % Red dots for lidar points
+
+x_coords = lidar_data(:, 1);
+y_coords = lidar_data(:, 2);
+z_coords = lidar_data(:, 3);
+
+object_x = 475359;
+object_y = 7865940;
+search_radius = 1;
+
+
+distances = sqrt((x_coords - object_x).^2 + (y_coords - object_y).^2);
+
+object_points = z_coords(distances <= search_radius);
+%disp("object_points");
+%disp(object_points);
+ %if numel(object_points) > 1
+% Calculate object height
+object_height1 = max(object_points) - min(object_points);
+disp("object_height");
+disp(object_height1);
